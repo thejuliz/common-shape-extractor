@@ -33,6 +33,7 @@ window.onload = function () {
                     image.src = picFile.result;
 
                     image.onload = function () {
+                        console.log("Processing file " + (processedFileCount + 1));
                         // access image size here 
                         var canvas = document.createElement("canvas");
                         canvas.width = this.width;
@@ -51,7 +52,7 @@ window.onload = function () {
                             imgArr[i] = new Array(this.height);
                             for (var j = 0; j < this.height; j++) {
                                 var imgData = canvas.getContext('2d').getImageData(i, j, 1, 1).data;
-                                var isNotWhite = imgData[0] < 255 && imgData[1] < 255 && imgData[2] < 255;
+                                var isNotWhite = imgData[0] < 240 && imgData[1] < 240 && imgData[2] < 240;
                                 // if (processedPixelArray[i][j] === undefined) processedPixelArray[i][j] = 0;
 
                                 imgArr[i][j] = isNotWhite;
@@ -103,21 +104,20 @@ function generateOutputImage(threshold) {
         canvas.width = width;
         canvas.height = height;
         var ctx = canvas.getContext('2d');
-
+        var imgData = ctx.createImageData(width, height);
+        var data = imgData.data;
         for (var i = 0; i < processedPixelArray.length; i++) {
             for (var j = 0; j < processedPixelArray[i].length; j++) {
+                var idx = (j*width*4) + (i*4);
                 if (processedPixelArray[i][j] >= threshold) {
-                    // console.log("Painting at (" + i + "," + j + ")");
-                    var imgData = ctx.createImageData(1, 1); // width x height
-                    var data = imgData.data;
-                    data[0] = 0;
-                    data[1] = 0;
-                    data[2] = 0;
-                    data[3] = 255;
-                    ctx.putImageData(imgData, i, j);
+                    data[idx] = 0;
+                    data[idx+1] = 0;
+                    data[idx+2] = 0;
+                    data[idx+3] = 255;
                 }
             }
         }
+        ctx.putImageData(imgData, 0, 0);
 
         output.insertBefore(canvas, null);
         log("Output generated successfully.");
