@@ -4,7 +4,9 @@ var processedFileCount = 0;
 
 var processedPixelArray = undefined;
 
+var resultCanvas = document.createElement("canvas");
 var output = document.getElementById("result");
+output.insertBefore(resultCanvas, null);
 
 window.onload = function () {
     //Check File API support
@@ -84,7 +86,7 @@ function pollingComplete() {
     processedFileCount++;
     log("Done processing " + processedFileCount + " file.");
     if (processedFileCount === processingFileCount) {
-        log("Processed " + processedFileCount + " files successfully.");
+        log("Processed " + processedFileCount + " files successfully. Input your threshold then click generate");
         var threshold = document.getElementById("threshold").value;
         generateOutputImage(parseInt(threshold));
     }
@@ -96,14 +98,14 @@ function log(text) {
 }
 
 function generateOutputImage(threshold) {
-    log("Generating an output image (threshold=" + threshold + ")");
+    // log("Generating an output image (threshold=" + threshold + ")");
     if (processedPixelArray.length > 0) {
-        var canvas = document.createElement("canvas");
+        
         var width = processedPixelArray.length;
         var height = processedPixelArray[0].length;
-        canvas.width = width;
-        canvas.height = height;
-        var ctx = canvas.getContext('2d');
+        resultCanvas.width = width;
+        resultCanvas.height = height;
+        var ctx = resultCanvas.getContext('2d');
         var imgData = ctx.createImageData(width, height);
         var data = imgData.data;
         for (var i = 0; i < processedPixelArray.length; i++) {
@@ -118,8 +120,14 @@ function generateOutputImage(threshold) {
             }
         }
         ctx.putImageData(imgData, 0, 0);
-
-        output.insertBefore(canvas, null);
-        log("Output generated successfully.");
+        //log("Output generated successfully.");
     }
+}
+
+function process() {
+    const context = resultCanvas.getContext('2d');
+    context.clearRect(0, 0, resultCanvas.width, resultCanvas.height);
+
+    var threshold = document.getElementById("threshold").value;
+    generateOutputImage(parseInt(threshold));
 }

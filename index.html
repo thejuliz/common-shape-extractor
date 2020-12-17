@@ -12,12 +12,13 @@
     </header>
     <article>
         <div>
-            <label for="threshold">Input threshold: </label>
-            <input id="threshold" type="number" />
-        </div>
-        <div>
             <label for="files">Select multiple files: </label>
             <input id="files" type="file" multiple />
+        </div>
+        <div>
+            <label for="threshold">Input threshold: </label>
+            <input id="threshold" type="number" />
+            <button onclick="javascript:process()">Generate</button>
         </div>
         <div id="log"></div>
         <div id="result"></div>
