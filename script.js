@@ -51,11 +51,11 @@ window.onload = function () {
                             imgArr[i] = new Array(this.height);
                             for (var j = 0; j < this.height; j++) {
                                 var imgData = canvas.getContext('2d').getImageData(i, j, 1, 1).data;
-                                var isBlack = imgData[0] === 0 && imgData[1] === 0 && imgData[2] === 0;
+                                var isNotWhite = imgData[0] < 255 && imgData[1] < 255 && imgData[2] < 255;
                                 // if (processedPixelArray[i][j] === undefined) processedPixelArray[i][j] = 0;
 
-                                imgArr[i][j] = isBlack;
-                                if (isBlack) {
+                                imgArr[i][j] = isNotWhite;
+                                if (isNotWhite) {
                                     processedPixelArray[i][j]++;
                                 }
                             }
